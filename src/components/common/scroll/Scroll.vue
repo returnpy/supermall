@@ -14,6 +14,10 @@ export default {
     probeType: {
       type: Number,
       default: 0
+    },
+    pullUpLoad: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -27,10 +31,18 @@ export default {
       probeType: this.probeType,
       pullUpLoad: this.pullUpLoad
     })
+      
+    if (this.probeType === 2 || this.probeType === 3) {
+      this.scroll.on('scroll', position => {
+        this.$emit('scroll', position)
+      })
+    }
 
-    this.scroll.on('scroll', position => {
-      this.$emit('scroll', position)
-    })
+    if (this.pullUpLoad) {
+      this.scroll.on('pullingUp', () => {
+        this.$emit('pullingUp')
+      })
+    }
   },
   methods: {
     scrollTo (x, y, time = 300) {
@@ -41,6 +53,9 @@ export default {
     },
     refresh () {
       this.scroll && this.scroll.refresh()
+    },
+    getScrollY () {
+      return this.scroll ? this.scroll.y : 0
     }
   }
 }
